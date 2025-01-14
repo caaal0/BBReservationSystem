@@ -278,13 +278,17 @@ const maxDate = computed(() => {
 const today = computed (() => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const y = today.getFullYear();
-  const m = today.getMonth()+1;
+  var y = today.getFullYear();
+  var m = today.getMonth()+1;
   var d = today.getDate();
   if(d < 10){
     d = '0'+d;
   }
+  if(m < 10){
+    m = '0'+m;
+  }
   const day = `${y}-${m}-${d}`
+  // console.log(selectedDay.value)
   // console.log(day)
   if(selectedDay.value == day){
     // console.log('true')
