@@ -62,12 +62,20 @@ onMounted(async () => {
   <v-container class="fill-height">
     <v-row justify="center">
       <v-col class="text-center" cols="12" >
-        <h1>
-          3rd floor
+        <v-row justify="center" md="6" xs="12">
+          <h1 :style="{padding: '10px'}">
+            3rd floor
+          </h1>
+          <svg width="225px" height="50px" viewBox="0 0 225 50">
+            <rect x="25" y="20" width="15" height="15" fill="green" stroke="black" stroke-width="1"/>
+            <text x="45" y="35" font-family="Verdana" font-size="12" fill="black">Available</text>
+            <rect x="125" y="20" width="15" height="15" fill="red" stroke="black" stroke-width="1"/>
+            <text x="145" y="35" font-family="Verdana" font-size="12" fill="black">Occupied</text>
+          </svg>
           <v-tooltip activator="parent" v-model="showHint" location="bottom">
             Select a seat to reserve
           </v-tooltip>
-        </h1>
+        </v-row>
         <MainFloorSeats @seat-selected="selectSeat"/>
         <!-- seat calendar dialog -->
         <v-dialog v-model="showSeatCalendar" width="1000">
