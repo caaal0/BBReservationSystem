@@ -12,6 +12,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import { md3 } from 'vuetify/blueprints'
 import { VTimePicker } from 'vuetify/labs/VTimePicker'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -22,5 +23,6 @@ export default createVuetify({
   mobileBreakpoint: 'sm',
   components: {
     VTimePicker,
+    VDateInput,
   },
 })
