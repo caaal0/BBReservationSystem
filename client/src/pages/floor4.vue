@@ -30,7 +30,7 @@ onMounted( async () => {
           <h1 :style="{padding: '10px'}">
             4th floor
           </h1>
-          <svg width="225px" height="50px" viewBox="0 0 225 50">
+          <svg width="225px" height="90px" viewBox="0 0 225 50">
             <rect x="25" y="20" width="15" height="15" fill="green" stroke="black" stroke-width="1"/>
             <text x="45" y="35" font-family="Verdana" font-size="12" fill="black">Available</text>
             <rect x="125" y="20" width="15" height="15" fill="red" stroke="black" stroke-width="1"/>
