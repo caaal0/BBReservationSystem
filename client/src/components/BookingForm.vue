@@ -119,7 +119,6 @@ async function validateForm(formRef) {
   <v-container>
     <v-row justify="center">
       <v-col class="text-center" md="6" sm="8" xs="12" cols="12">
-        <h1>Book Seat #</h1>
         <v-form ref="bookingFormRef" @submit.prevent="submitInfo">
           <v-date-input
             clearable
