@@ -55,7 +55,7 @@ const selectSeat = (seatNumber) =>{
   <div v-if="seatsStore.loading">
     <v-progress-circular
       indeterminate
-      color="primary"
+      color="green"
     ></v-progress-circular>
   </div>
   <div v-else>
