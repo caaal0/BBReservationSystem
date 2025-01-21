@@ -4,21 +4,17 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import reservationHelper from '../firebase/reservationsHelper'
 import usersHelper from '../firebase/usersHelper'
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores/auth'
+import BookingForm from './BookingForm.vue'
 
 const authStore = useAuthStore()
-const reservationDialog = ref(false)
+const showBookingForm = ref(false)
 const step = ref(1) // Tracks the current step of the reservation process
 const customers = ref([])
 const finalizeReservation = ref(false)  // Dialog to confirm reservation details
 const disableConfirmBtn = ref(false)
 
 const showHint = ref(true)
-
-// User choices
-const selectedDay = ref(null)
-const selectedTime = ref(null)
-const selectedOption = ref(null)
 
 const snackBarMsg = ref('');
 const snackBarSuccess = ref(true);
@@ -128,7 +124,7 @@ function openReservationDialog() {
     showSnackbar.value = true
     return
   }
-  reservationDialog.value = true;
+  showBookingForm.value = true;
 }
 
 //function to handle cell click on date-picker
@@ -256,7 +252,7 @@ async function finishReservation() {
     snackBarSuccess.value = false
   }
   showSnackbar.value = true
-  reservationDialog.value = false
+  showBookingForm.value = false
   disableConfirmBtn.value = false
 }
 
@@ -322,6 +318,16 @@ const specialHours = {
   // },
 }
 
+function proceedToBooking(){
+  if(authStore.userRole ==='customer'){
+    showBookingForm.value = true;
+  }else{
+    snackBarMsg.value = "Please login to book this seat"
+    snackBarSuccess.value = false
+    showSnackbar.value = true
+  }
+}
+
 onMounted(async () => {
   // console.log('Mounted')
   loadEvents()
@@ -341,7 +347,10 @@ onMounted(async () => {
       <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-card-text class="justify-center">
-      <div class="scroll-container">
+      <div v-if="showBookingForm" class="scroll-container">
+        <BookingForm @close="showBookingForm = false" />
+      </div>
+      <div v-else class="scroll-container">
         <div v-if="finishedLoadingEvents" class="calendar-wrapper">
           <vue-cal
             class="vuecal--green-theme"
@@ -365,7 +374,7 @@ onMounted(async () => {
               icon="$plus"
               variant="text"
               class="event-create-btn"
-              @click="openReservationDialog"
+              @click="proceedToBooking"
             >
               <v-icon>mdi-plus</v-icon>
               <v-tooltip activator="parent" v-model="showHint" location="start">
@@ -381,103 +390,7 @@ onMounted(async () => {
         </div>
       </div>
     </v-card-text>
-    <v-dialog v-model="reservationDialog" max-width="370" @update:model-value="resetSteps">
-      <v-card v-if="step === 1" class="text-center">
-        <v-card-title>Pick a date</v-card-title>
-        <v-card-text class="justify-center">
-          <div class="date-picker">
-            <vue-cal
-              class="vuecal--date-picker vuecal--green-theme"
-              xsmall
-              hide-view-selector
-              height="200"
-              :time="false"
-              :transitions="false"
-              :min-date="minDate"
-              :max-date="maxDate"
-              active-view="month"
-              :disable-views="['week']"
-              @cell-click="onCellClick"
-              :dblclick-to-navigate="false"
-              style="width: 210px;height: 230px">
-            </vue-cal>
-          </div>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text color="error" @click="reservationDialog = false">Cancel</v-btn>
-          <v-btn text color="#6b8d71" @click="nextStep" :disabled="!selectedDay">Next</v-btn>
-        </v-card-actions>
-      </v-card>
-      <!-- Step 2: Pick a Time -->
-    <v-card v-if="step === 2">
-      <v-card-title class="text-center">Pick a start time</v-card-title>
-      <v-card-text class="justify-center">
-        <!-- Vuetify Time Picker -->
-        <v-time-picker
-          v-model="selectedTime"
-          full-width
-          height="500"
-          width="320"
-          :min="today? getCurrentTime : '00:00'"
-          color="#6b8d71"
-          format="ampm"
-          :ampm-in-title='true'
-        />
-      </v-card-text>
-      <v-card-actions class="d-flex justify-between">
-        <v-btn text color="#6b8d71" @click="prevStep">Back</v-btn>
-        <v-btn text color="#6b8d71" @click="nextStep" :disabled="!selectedTime">Next</v-btn>
-      </v-card-actions>
-    </v-card>
 
-    <!-- Step 3: Choose an Option -->
-    <v-card v-if="step === 3">
-      <v-card-title class="text-center">How many hours?</v-card-title>
-      <v-card-text class="justify-center">
-        <!-- Vuetify Radio Button Group -->
-        <v-radio-group v-model="selectedOption" column color="#6b8d71">
-          <v-radio label="1 Hour" value="1"></v-radio>
-          <v-radio label="3 Hours" value="3"></v-radio>
-          <v-radio label="5 Hours" value="5"></v-radio>
-        </v-radio-group>
-        <!-- if admin, add option to book for a customer -->
-        <v-autocomplete
-          v-if="authStore.user && (authStore.userRole === 'admin' || authStore.userRole === 'staff')"
-          v-model="customerSelected"
-          :items="customers"
-          item-title="name"
-          item-value="userId"
-          label="Book for customer"
-          dense
-          hide-details
-          clearable
-          variant="outlined"
-          auto-select-first="true"
-        >
-        </v-autocomplete>
-      </v-card-text>
-      <v-card-actions class="d-flex justify-between">
-        <v-btn text color="#6b8d71" @click="prevStep">Back</v-btn>
-        <v-btn text color="#6b8d71" @click="finalizeReservation = true" :disabled="!canFinishReservation">Finish</v-btn>
-      </v-card-actions>
-    </v-card>
-    <v-dialog v-model="finalizeReservation" persistent max-width="300">
-      <v-card>
-        <v-card-title>Confirm Reservation</v-card-title>
-        <v-card-text>
-          <p><strong>Confirm the following details:</strong></p>
-          <p>Seat: {{selectedSeat}}</p>
-          <p>Day: {{selectedDay}}</p>
-          <p>Time: {{selectedTime}}</p>
-          <p>Duration: {{selectedOption}} hours</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text color="error" @click="finalizeReservation = false">Cancel</v-btn>
-          <v-btn text color="#6b8d71" @click="finishReservation" :disabled="disableConfirmBtn">Confirm</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    </v-dialog>
   </v-card>
   <v-snackbar v-model="showSnackbar" :color="snackBarSuccess? 'green':'red'" timeout="3000">
     {{ snackBarMsg }}
