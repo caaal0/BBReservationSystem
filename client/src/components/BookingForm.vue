@@ -67,7 +67,17 @@ const maxDate = computed(() => {
   if(authStore.userRole === 'customer'){
     today.setDate(today.getDate() + 14);
   }
-  return today;
+  var y = today.getFullYear();
+  var m = today.getMonth()+1;
+  var d = today.getDate();
+  if(d < 10){
+    d = '0'+d;
+  }
+  if(m < 10){
+    m = '0'+m;
+  }
+  const day = `${y}/${m}/${d}`
+  return day;
 });
 
 
@@ -154,7 +164,7 @@ async function validateForm(formRef) {
           </v-card>
           </v-menu>
         </v-text-field>
-        <p>How many hours?</p>
+        <p id="howmanyhours">How many hours?</p>
         <v-radio-group v-model="selectedOption" column :rules="[required]" color="green-darken-1">
           <v-radio label="1 Hour" value="1"></v-radio>
           <v-radio label="3 Hours" value="3"></v-radio>
@@ -163,7 +173,7 @@ async function validateForm(formRef) {
         <v-row justify="center">
           <v-btn
           variant="outlined"
-          :style="{margin: '10px'}"
+          :style="{margin: '12px'}"
           color="green-darken-1"
           rounded="false"
           >
@@ -171,7 +181,7 @@ async function validateForm(formRef) {
           </v-btn>
           <v-btn
           type="submit"
-          :style="{margin: '10px'}"
+          :style="{margin: '12px'}"
           color="green-darken-1"
           rounded="false"
           :loading="loading"
@@ -194,13 +204,13 @@ async function validateForm(formRef) {
 
 <style>
 h1 {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 20px;
   color: var(--green-dark);
 }
 
-p {
+#howmanyhours {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 1.5rem;
   margin-bottom: 10px;
