@@ -60,43 +60,51 @@ const selectSeat = (seatNumber) =>{
 </script>
 
 <template>
-  <svg width="100%" height="500px" viewBox="0 0 500 500">
-    <!-- wall outline -->
-    <path d="M0,50 l0,60 l115,0 l0,260 l350,0 l0,-320 l-115,0 l0,60 l-175,0 l0,-60 z" stroke="brown" fill="transparent" stroke-width="5" />
-    <!-- Tables -->
-    <rect x="1" y="52" width="110" height="20" fill="saddlebrown" />
-    <circle cx="265" cy="125" r="15" fill="saddlebrown" />
-    <rect x="352" y="52" width="20" height="50" fill="saddlebrown" />
-    <rect x="433" y="140" width="30" height="135" fill="saddlebrown" />
-    <rect x="116" y="195" width="205" height="45" fill="saddlebrown" />
-    <rect x="130" y="338" width="200" height="30" fill="saddlebrown" />
-    <!-- Seats -->
-    <g v-for="seat in seats" :key="seat.number">
-      <!-- Seat rectangle -->
-      <rect
-        :x="seat.x"
-        :y="seat.y"
-        width="25"
-        height="25"
-        stroke="black"
-        stroke-width="1"
-        :fill="availableSeats.includes(seat.number) ? 'green' : 'red'"
-        @click="selectSeat(seat.number)"
-        style="cursor: pointer"
-      />
-      <!-- Seat number text inside the rectangle -->
-      <text
-        :x="seat.x + 12.5"
-        :y="seat.y + 17"
-        font-size="10"
-        fill="white"
-        text-anchor="middle"
-      >
-        {{ seat.number }}
-      </text>
-    </g>
-    <!-- Stairs -->
-    <path d="M355,365 l0,-75 l105,0" stroke="black" stroke-dasharray="5,5" fill="transparent"/>
-    <text x="390" y="330" font-size="0.75rem" fill="saddlebrown" font-weight="bold">STAIRS</text>
-  </svg>
+  <div v-if="seatsStore.loading">
+    <v-progress-circular
+      indeterminate
+      color="green"
+    ></v-progress-circular>
+  </div>
+  <div v-else>
+    <svg width="100%" height="500px" viewBox="0 0 500 500">
+      <!-- wall outline -->
+      <path d="M0,50 l0,60 l115,0 l0,260 l350,0 l0,-320 l-115,0 l0,60 l-175,0 l0,-60 z" stroke="brown" fill="transparent" stroke-width="5" />
+      <!-- Tables -->
+      <rect x="1" y="52" width="110" height="20" fill="saddlebrown" />
+      <circle cx="265" cy="125" r="15" fill="saddlebrown" />
+      <rect x="352" y="52" width="20" height="50" fill="saddlebrown" />
+      <rect x="433" y="140" width="30" height="135" fill="saddlebrown" />
+      <rect x="116" y="195" width="205" height="45" fill="saddlebrown" />
+      <rect x="130" y="338" width="200" height="30" fill="saddlebrown" />
+      <!-- Seats -->
+      <g v-for="seat in seats" :key="seat.number">
+        <!-- Seat rectangle -->
+        <rect
+          :x="seat.x"
+          :y="seat.y"
+          width="25"
+          height="25"
+          stroke="black"
+          stroke-width="1"
+          :fill="availableSeats.includes(seat.number) ? 'green' : 'red'"
+          @click="selectSeat(seat.number)"
+          style="cursor: pointer"
+        />
+        <!-- Seat number text inside the rectangle -->
+        <text
+          :x="seat.x + 12.5"
+          :y="seat.y + 17"
+          font-size="10"
+          fill="white"
+          text-anchor="middle"
+        >
+          {{ seat.number }}
+        </text>
+      </g>
+      <!-- Stairs -->
+      <path d="M355,365 l0,-75 l105,0" stroke="black" stroke-dasharray="5,5" fill="transparent"/>
+      <text x="390" y="330" font-size="0.75rem" fill="saddlebrown" font-weight="bold">STAIRS</text>
+    </svg>
+  </div>
 </template>
