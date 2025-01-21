@@ -2,10 +2,12 @@
 import { useAuthStore } from '../stores/auth.js';
 import { onMounted, ref } from 'vue';
 
+
 const props = defineProps({
   selectedSeat: String,
 });
-//TODO: ILAGAY MO NA LANG SA ISANG DIALOG CALENDAR THEN WHEN THEY CLICK THE + BUTTON, LALABAS ITONG BOOKING FORM
+
+const emit = defineEmits(['close']);
 
 const snackBarMsg = ref('');
 const snackBarSuccess = ref(true);
@@ -176,6 +178,7 @@ async function validateForm(formRef) {
           :style="{margin: '12px'}"
           color="green-darken-1"
           rounded="false"
+          @click="emit('close')"
           >
             Go Back
           </v-btn>
