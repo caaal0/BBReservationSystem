@@ -137,7 +137,7 @@ async function validateForm(formRef) {
           :rules="[required]"
           variant="outlined"
           color="green-darken-1"
-          label="Picker a time to start"
+          label="Pick a time to start"
           prepend-icon="mdi-clock-time-four-outline"
         >
           <v-menu
@@ -188,7 +188,7 @@ async function validateForm(formRef) {
           rounded="false"
           :loading="loading"
           >
-            Submit
+            Proceed to Payment
           </v-btn>
         </v-row>
         </v-form>
